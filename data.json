@@ -26,7 +26,7 @@
     {
       "id": "generate-brick",
       "title": "Hire a brickmaker",
-      "description": "Automatically creates $MULTIPLIER brick every second. Costs $COST bricks.",
+      "description": "Automatically creates $MULTIPLIER brick every second. Costs $COST bricks. Brickmakers hired: $BRICKMAKERS",
       "action": "generate",
       "structure": "brick",
       "cost": {
@@ -36,21 +36,6 @@
       },
       "preview": "10",
       "repeatable": "true",
-      "limit": 100
-    },
-    {
-      "id": "generate-hut",
-      "title": "Appoint a city planner",
-      "description": "Constructs huts as soon as enough resources are available. Costs $COST bricks.",
-      "action": "generate",
-      "structure": "hut",
-      "cost": {
-        "currency": "brick",
-        "initial_cost": "3000",
-        "growth": "1.2"
-      },
-      "preview": "10",
-      "repeatable": "false",
       "limit": 100
     },
     {
@@ -88,13 +73,13 @@
       "title": "Learn the Inventor's Skill",
       "description": "Whatever it may be. Costs $COST bricks.",
       "action": "multiply",
-      "structure": "hut",
-      "amount": "1.1",
+      "structure": "brick",
+      "amount": "1.15",
       "cost": {
         "currency": "brick",
         "initial_cost": "1200"
       },
-      "preview": "20",
+      "show_condition": "inventorShown",
       "repeatable": "false"
     }
   ],
@@ -139,8 +124,27 @@
       "condition": {
         "structures":[
           {
+            "structure": "brick",
+            "amount": 40,
+            "use_total": "false"
+          }
+        ]
+      },
+      "repeatable": "false",
+      "text": [
+        {
+          "title": "The Brickmaker’s House",
+          "body": "is simple, but it weathers the dust storms that rage at night. You figure you should keep a good thing going.",
+          "button": "Done"
+        }
+      ]
+    },
+    {
+      "condition": {
+        "structures":[
+          {
             "structure": "hut",
-            "amount": 5
+            "amount": 3
           }
         ]
       },
@@ -148,7 +152,7 @@
       "text": [
         {
           "title": "A Woman Moves In",
-          "body": "in the dead of night. In the morning she emerges with an infant swaddled to her back. The first Brickmaker asks what she can do, how she’ll contribute. Instead of responding, she disappears behind a dune with her child.",
+          "body": "in the dead of night. In the morning she emerges with an infant swaddled on her back. The first Brickmaker asks what she can do, how she’ll contribute. Instead of responding, she disappears behind a dune with her child.",
           "button": "Weird"
         }
       ]
@@ -158,7 +162,7 @@
         "structures":[
           {
             "structure": "hut",
-            "amount": 7
+            "amount": 5
           }
         ]
       },
@@ -210,7 +214,7 @@
           "button": "Next"
         },
         {
-          "body": "She fixes a beady eye on you as she turns to leave. “Do you know what you’re standing on?” she asks, before disappearing.",
+          "body": "She fixes a beady eye on you as she turns to leave. “Do you know what you’re standing on?” she asks, before leaving.",
           "button": "Done"
         }
       ]
@@ -232,7 +236,7 @@
           "button": "Next"
         },
         {
-          "body": "In your dreams you see tiny insects scurrying over the unpaven roads, burying themselves into the earth. You wake up in a cold sweat.",
+          "body": "In your dreams you see tiny insects unburying themselves into the earth, scurrying over the unpaven roads. You wake up in a cold sweat.",
           "button": "Agh"
         }
       ]
@@ -261,6 +265,29 @@
           "body": "You look at his number. The lead hunter stands behind you. “Are you sure?” she asks.",
           "button": "I suppose"
         }
+      ],
+      "condition_set": "inventorShown"
+    },
+    {
+      "condition": {
+        "structures":[
+          {
+            "structure": "hut",
+            "amount": 23
+          }
+        ]
+      },
+      "repeatable": "false",
+      "text": [
+        {
+          "title": "You Dream Again",
+          "body": "of the insects, and this time they lie deeper into the earth, whispering to you through reverberations of soil. They’re telling you about their history.",
+          "button": "Try to Listen"
+        },
+        {
+          "body": "You realize you can’t speak their language. Only their emotion is coherent: a restlessness, an urgency.",
+          "button": "Wake Up"
+        }
       ]
     },
     {
@@ -276,14 +303,95 @@
       "text": [
         {
           "title": "One Day As You Ride Into Town",
-          "body": "you realize the huts you’ve built now sprawled across the horizon, shaped by neighborhoods & industries. The First Brickmaker comes to you that night with an idea for expansion. “It’s time to make something more,” he says.",
+          "body": "you realize the huts you’ve built now sprawled across the horizon, shaped by neighborhoods & industries. The first Brickmaker comes to you that night with an idea for expansion. “It’s time to make something more,” he says.",
           "button": "More?"
         }
       ]
     },
     {
       "condition": {
-        "cardId": "increase-efficiency"
+        "cardId": "build-village",
+        "amount": 1
+      },
+      "repeatable": "false",
+      "text": [
+        {
+          "title": "On the Day You Leave",
+          "body": "you appoint the lead hunter as Mayor. It was your role up until this point, you suppose. You tell her to take care of what you’ve built.",
+          "button": "Next"
+        },
+        {
+          "body": "You take off with only a small crew, all restless in their own ways. At your side is the first Brickmaker, who already has a blueprint in mind, a vision.",
+          "button": "Go Forth"
+        }
+      ]
+    },
+    {
+      "condition": {
+        "structures":[
+          {
+            "structure": "village",
+            "amount": 1
+          },
+          {
+            "structure": "hut",
+            "amount": 10,
+            "use_total": "false"
+          }
+        ]
+      },
+      "repeatable": "false",
+      "text": [
+        {
+          "title": "The Soothsayer Returns",
+          "body": "and at first you forget where you’ve seen her before. She asks to tell your fortune. With the first Brickmaker out on an errand, you nod tacidly.",
+          "button": "Next"
+        },
+        {
+          "body": "She leads you to an open area and draws arcane lines in the sand. After studying her markings for ages, she asks if you’ve had any strange dreams lately.",
+          "button": "The Insects!"
+        },
+        {
+          "body": "She nods, as if expecting your answer. “They used to worship beetles here, you know. The gods were said to speak through them.”",
+          "button": "Oh"
+        },
+        {
+          "body": "She regards your blank expression and shakes her head. “So much is lost,” she laments, turning to leave.",
+          "button": "Thanks?"
+        }
+      ]
+    },
+    {
+      "condition": {
+        "structures":[
+          {
+            "structure": "village",
+            "amount": 1
+          },
+          {
+            "structure": "hut",
+            "amount": 32,
+            "use_total": "false"
+          }
+        ]
+      },
+      "repeatable": "false",
+      "text": [
+        {
+          "title": "The First Brickmaker Says",
+          "body": "that it’s time to go; that you two are off to bigger, better things. You feel like you’ve barely spent time at the new village.",
+          "button": "Next"
+        },
+        {
+          "body": "”There’s so much left of this world to see,” he says. ",
+          "button": "Okay"
+        }
+      ]
+    },
+    {
+      "condition": {
+        "cardId": "increase-efficiency",
+        "amount": 1
       },
       "repeatable": "false",
       "text": [
@@ -293,6 +401,71 @@
           "button": "Phew"
         }
       ]
+    },
+    {
+      "condition": {
+        "decrement": "5",
+        "structure": "brick"
+      },
+      "repeatable": "false",
+      "text": [
+        {
+          "title": "The Brickmaker Stops You",
+          "body": "and asks what you’re doing. You have no good answer. \"Stop destroying my work,\" he tells you.",
+          "button": "Yup"
+        }
+      ]
+    }
+  ],
+  "titles": [
+    {
+      "condition":{
+        "structure": "brick",
+        "amount": "0"
+      },
+      "title": "An Expanse of Clay"
+    },
+    {
+      "condition":{
+        "structure": "hut",
+        "amount": "2"
+      },
+      "title": "A Few Huts in the Desert"
+    },
+    {
+      "condition":{
+        "structure": "hut",
+        "amount": "10"
+      },
+      "title": "A Scattered Settlement"
+    },
+    {
+      "condition":{
+        "structure": "hut",
+        "amount": "17"
+      },
+      "title": "A Modest Town"
+    },
+    {
+      "condition":{
+        "structure": "hut",
+        "amount": "24"
+      },
+      "title": "A Bustling City-State"
+    },
+    {
+      "condition":{
+        "structure": "village",
+        "amount": "3"
+      },
+      "title": "A Bustling City-State"
+    },
+    {
+      "condition":{
+        "structure": "village",
+        "amount": "8"
+      },
+      "title": "A Burgeoning Empire"
     }
   ]
 }

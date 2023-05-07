@@ -3,19 +3,23 @@ var structuresMap;
 var cardsMap;
 var generatorsByNameMap;
 var generatorsByLevelMap;
+var titleMap;
 var storyMap;
 var currentLand;
+var currentTitle = "";
 var structureIndex = 0;
 var messages = {};
 var messagesMax = 20;
 var messageHead = 0;
 var messageTail = 0;
 var resolveFunc;
+var inventorShown = false;
 
 var messageMap = {
-    "brick-plus": "You create a brick from the earth's clay.",
-    "brick=plus-max": "You have depleted the land.",
-    "brick-minus": "You crumble the brick back into earth.",
+    "brick-plus": "Created a brick from the earth's clay.",
+    "brick-plus-max": "You have depleted the land.",
+    "brick-minus-one": "Crumbled the brick back into earth.",
+    "brick-minus-again": "Crumbled the brick back into earth, again.",
     "brick-minus-max": "No bricks.",
     "hut-build": "Built a hut.",
     "brick-generate": "Hired a brickmaker.",
@@ -43,11 +47,16 @@ $(document).ready(function() {
             for (var i = 0; i < data.story.length; i++){
                 storyMap.set(data.story[i].condition, data.story[i]);
             }
+
+            for (var i = 0; i < data.titles.length; i++){
+                titleMap.set(data.titles[i].condition, data.titles[i].title);
+            }
         }
         
         unlockLand(0, !hasSaveData);
         generateAllCards();
         updateCards();
+        updateTitle();
         setupVisuals();
 
         $(".plus").click(onPlusClicked);
@@ -81,7 +90,7 @@ $(document).ready(function() {
 function update(){
     generatorsByNameMap.forEach(function(generator, structureName) {
         if (generator.increment > 0){
-            incrementStructure(generator, structureName, generator.increment / updateSpeed);
+            incrementStructure(generator, structureName, (generator.increment * gen.multiplier) / updateSpeed);
         }
     });
 }
@@ -119,9 +128,11 @@ function incrementStructure(generator, structureName, amount, isCheat = false){
     
     if (!isCheat){
         updateStory(updateCards);
+        updateTitle();
     }
     else{
         updateCards();
+        updateTitle();
     }
     return true;
 }
@@ -133,6 +144,7 @@ function decrementStructure(generator, structureName, amount){
 
     generator.value -= amount;
     generator.total -= amount;
+    generator.decremented += amount;
     if (generator.level > 0) { // Must give to structure beneath it
         var lowerLandGen = generatorsByLevelMap.get("land" + generator.landLevel + "." +  (generator.level - 1));
         lowerLandGen.value += generator.cost;
@@ -144,7 +156,7 @@ function decrementStructure(generator, structureName, amount){
         setCtr("land", Math.ceil(landGen.value));
     }
     setCtr(structureName, generator.value);
-    updateCards();
+    updateStory(updateCards);
     return true;
 }
 
@@ -160,6 +172,7 @@ function unlockLand(landLevel, newData){
                     value: 0, 
                     total: 0,
                     increment: 0, 
+                    decremented: 0,
                     multiplier: 1,
                     landLevel: landLevel, 
                     level: land.structures[i].level, 
@@ -253,7 +266,14 @@ function onMinusClicked(event){
     var generator = generatorsByNameMap.get(structureName);
     if (generator != undefined){
         if (decrementStructure(generator, structureName, 1)){
-            postMessage(messageMap[structureName + "-minus"]);
+            if (structureName == "brick"){
+                if (generator.decremented == 1){
+                    postMessage(messageMap[structureName + "-minus-one"]);
+                }
+                else{
+                    postMessage(messageMap[structureName + "-minus-again"]);
+                }
+            }
         }
         else{
             postMessage(messageMap[structureName + "-minus-max"]);
@@ -300,7 +320,11 @@ function updateCards(){
         var description = card.description.replace("$COST", Math.ceil(card.cost.current));
         if (card.description.includes("$MULTIPLIER")){
             var gen = generatorsByNameMap.get(card.structure);
-            description = description.replace("$MULTIPLIER", Math.ceil(gen.multiplier));
+            description = description.replace("$MULTIPLIER",  gen.multiplier);
+        }
+        if (card.description.includes("$BRICKMAKERS")){
+            var gen = generatorsByNameMap.get(card.structure);
+            description = description.replace("$BRICKMAKERS", Math.ceil(gen.increment));
         }
         $("#" + id + " .card-body")[0].innerHTML = description;
 
@@ -333,6 +357,13 @@ function canFulfill(card){
     if (card.numBought > card.limit || (card.numBought > 0 && !card.repeatable)){
         return false;
     }
+
+    if (card.hasOwnProperty("show_condition")){
+        if (card.show_condition == "inventorShown" && !inventorShown){
+            return false;
+        }
+    }
+
     // TODO: don't hard code land number
     var name = card.cost.currency == "land" ? "land0" : card.cost.currency;
     gen = generatorsByNameMap.get(name);
@@ -347,6 +378,14 @@ function canShowPreview(card, id){
     if (($("#" + id)[0].style.display == "flex") && !card.hideable){
         return true;
     }
+
+    if (card.hasOwnProperty("show_condition")){
+        if (card.show_condition == "inventorShown"){
+            return inventorShown;
+        }
+    }
+
+    // otherwise we compare it against the card's cost
     var name = card.cost.currency == "land" ? "land0" : card.cost.currency;
     gen = generatorsByNameMap.get(name);
     return gen.value - card.cost.current >= -card.preview;
@@ -381,7 +420,7 @@ function onCardClick(e){
             var costGen = generatorsByNameMap.get(card.cost.currency);
             generator.increment += 1;
             $("#" + card.structure + "-rate")[0].closest(".sub.row.rate") .style.display = "block";
-            $("#" + card.structure + "-rate")[0].innerHTML = generator.increment;
+            $("#" + card.structure + "-rate")[0].innerHTML = (generator.multiplier * generator.increment).toFixed(2);
             costGen.value -= card.cost.current;
             card.cost.current *= card.cost.growth;
             postMessage(messageMap[card.structure+"-generate"]);
@@ -400,9 +439,10 @@ function onCardClick(e){
         }
         else if (card.action == "multiply"){
             var generator = generatorsByNameMap.get(card.structure);
+            console.log(generator)
             generator.multiplier *= parseFloat(card.amount);
-            generator.increment *= parseFloat(card.amount);
-            $("#" + card.structure + "-rate")[0].innerHTML = generator.increment;
+            console.log(generator.multiplier, generator.increment)
+            $("#" + card.structure + "-rate")[0].innerHTML = (generator.multiplier * generator.increment).toFixed(2);
         }
     }
     updateStory(updateCards);
@@ -441,16 +481,25 @@ function updateStory(callback = null){
         if (condition.hasOwnProperty("structures")){
             for (var i = 0; i < condition.structures.length; i++){
                 var gen = generatorsByNameMap.get(condition.structures[i].structure);
-                if (gen.total < parseInt(condition.structures[i].amount)){
+                var val = condition.structures[i].hasOwnProperty("use_total") && condition.structures[i].use_total == "false" ? gen.value : gen.total;
+                if (val < parseInt(condition.structures[i].amount)){
                     conditionMet = false;
                     break;
                 }
             }
         }
-        if (condition.hasOwnProperty("cardId")){
+        else if (condition.hasOwnProperty("cardId")){
             var card = cardsMap.get(condition.cardId);
-            if (card == null || card.numBought == 0){
+            if (card == null || card.numBought != condition.amount){
                 conditionMet = false;
+            }
+        }
+        else if (condition.hasOwnProperty("decrement")){
+            if (condition.structure != null){
+                var gen = generatorsByNameMap.get(condition.structure);
+                if (gen.decremented < parseInt(condition.decrement)){
+                    conditionMet = false;
+                }
             }
         }
         
@@ -459,6 +508,11 @@ function updateStory(callback = null){
             showTextAsync(story.text, callback);
             if (story.repeatable == "false"){
                 storyMap.delete(condition);
+            }
+            if (story.hasOwnProperty("condition_set")){
+                if (story.condition_set == "inventorShown"){
+                    inventorShown = true;
+                }
             }
             break;
         }
@@ -482,6 +536,23 @@ async function showTextAsync(text, callback){
     hideModal();
 }
 
+function updateTitle(){
+    var mostUpdatedTitle = "";
+    for (let [condition, title] of titleMap){
+        var gen = generatorsByNameMap.get(condition.structure);
+        if (gen.value >= condition.amount){
+            mostUpdatedTitle = title;
+        }
+    }
+    if (mostUpdatedTitle != currentTitle){
+        currentTitle = mostUpdatedTitle;
+        $("#title")[0].innerHTML = currentTitle;
+        document.title = currentTitle;
+    }
+}
+
+// Saving / Loading
+
 function setMaps(){
     var saveData = localStorage.getItem("data");
     if (saveData != null){
@@ -494,7 +565,7 @@ function setMaps(){
             generatorsByLevelMap = new Map(saveData.generatorsByLevelMap);
             storyMap = new Map(saveData.storyMap);
             cardsMap = new Map(saveData.cardsMap);
-            console.log(generatorsByLevelMap)
+            titleMap = new Map(saveData.titleMap);
             return true;
         }
         catch (e) {
@@ -507,6 +578,7 @@ function setMaps(){
     generatorsByNameMap = new Map();
     generatorsByLevelMap = new Map();
     storyMap = new Map();
+    titleMap = new Map();
     return false;
 }
 
@@ -519,6 +591,7 @@ function saveData(){
         cardsMap: [...cardsMap],
         structuresMap: [...structuresMap],
         landsMap: [...landsMap],
+        titleMap: [...titleMap],
     }
     localStorage.setItem("data", JSON.stringify(data));
 }
