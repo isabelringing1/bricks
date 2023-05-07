@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+  <head>
+    <title>An Expanse of Clay</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anonymous+Pro:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.6.3.js"></script>
+    <script src="visuals.js"></script>
+    <script src="main.js"></script>
+    <meta charset="UTF-8"/>
+  </head>
+  <body>
+    <div id="modal-container">
+      <div id="modal">
+        <div id="modal-title">Modal Title</div>
+        <div id="modal-body">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam</div>
+        <div id="modal-button-container"><div id="modal-button" class="base-button">Okay</div></div>
+      </div>
+    </div>
+    <div id="main">
+      <div id="menu">
+        <div style="display:flex"><span id="save-button" class="base-button"> Save </span>  <span id="save-tag" class="tag">Saved!</span></div><br>
+        <div style="display:flex"><span id="reset-button" class="base-button"> Reset </span> <span id="reset-tag" class="tag">Cleared!</span> </div>
+        
+      </div>
+      <div id="title">An Expanse of Clay</div>
+      <div id="body-bottom">
+        <div class="column-inner">
+          <div id="materials">
+            <div class="row">Land:&nbsp<span class="ctr" id="land-ctr">1,000,000</span></div>
+            <br>
+            <!-- More Structure Rows Here -->
+        </div>
+        </div>
+        <div class="column-inner">
+          <div id="cards"> 
+            <!-- More Cards Here -->
+          </div>
+        </div>
+      </div>
+      <div id="messages">
+      </div>
+    </div>
+    <div id="visuals">
+    </div>
+   
+  </body>
+
+  <template id="card-template">
+    <div class="card"><div class="card-title">Sample card title</div> 
+    <div class="card-body">Sample card description</div> </div>
+  </template>
+
+  <template id="structure-template">
+      <div class="button-space">
+        <button class="button small minus">-</button> 
+        <button class="button small plus">+</button>
+      </div>
+      
+    <div class="row"><span class="structure-name capital">Hut</span>:&nbsp<span class="ctr">0</span></div>
+    <div class="sub row cost">&emsp;Cost:&nbsp<span class="cost-display">0</span>&nbsp<span class="cost-name">brick</span>s</div>
+    <div class="sub row rate" style="display:none">&emsp;<span class="structure-name capital">Hut</span>s per second:&nbsp<span class="rate display">0</span></div>
+    <br>
+  </template>
+</html>

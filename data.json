@@ -1,0 +1,298 @@
+{
+  "lands": [
+    {
+      "name": "An Expanse of Clay",
+      "level": "0",
+      "initialLand": "1000000",
+      "structures": [
+        {
+          "name": "brick",
+          "level": "0"
+        },
+        {
+          "name": "hut",
+          "currency": "brick",
+          "level": "1"
+        },
+        {
+          "name": "village",
+          "currency": "hut",
+          "level": "2"
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "generate-brick",
+      "title": "Hire a brickmaker",
+      "description": "Automatically creates $MULTIPLIER brick every second. Costs $COST bricks.",
+      "action": "generate",
+      "structure": "brick",
+      "cost": {
+        "currency": "brick",
+        "initial_cost": "30",
+        "growth": "1.15"
+      },
+      "preview": "10",
+      "repeatable": "true",
+      "limit": 100
+    },
+    {
+      "id": "generate-hut",
+      "title": "Appoint a city planner",
+      "description": "Constructs huts as soon as enough resources are available. Costs $COST bricks.",
+      "action": "generate",
+      "structure": "hut",
+      "cost": {
+        "currency": "brick",
+        "initial_cost": "3000",
+        "growth": "1.2"
+      },
+      "preview": "10",
+      "repeatable": "false",
+      "limit": 100
+    },
+    {
+      "id": "build-hut",
+      "title": "Construct a hut",
+      "description": "Costs $COST bricks.",
+      "action": "build",
+      "structure": "hut",
+      "cost": {
+        "currency": "brick",
+        "initial_cost": "100",
+        "growth": "1.010743896"
+      },
+      "preview": "60",
+      "repeatable": "true",
+      "limit": 806
+    },
+    {
+      "id": "build-village",
+      "title": "Establish a village",
+      "description": "And venture forward. Costs $COST huts.",
+      "action": "build",
+      "structure": "village",
+      "cost": {
+        "currency": "hut",
+        "initial_cost": "30",
+        "growth": "1.03387"
+      },
+      "preview": "5",
+      "repeatable": "true",
+      "limit": 12
+    },
+    {
+      "id": "increase-efficiency",
+      "title": "Learn the Inventor's Skill",
+      "description": "Whatever it may be. Costs $COST bricks.",
+      "action": "multiply",
+      "structure": "hut",
+      "amount": "1.1",
+      "cost": {
+        "currency": "brick",
+        "initial_cost": "1200"
+      },
+      "preview": "20",
+      "repeatable": "false"
+    }
+  ],
+  "story": [
+    {
+      "condition": {
+        "structures":[
+          {
+            "structure": "brick",
+            "amount": 5
+          }
+        ]
+      },
+      "repeatable": "false",
+      "text": [
+        {
+          "title": "Your Bricks Crumble",
+          "body": "but they’re getting better. A beetle scurries by your feet as you set each one down. The work feels good. You are tired of this barren world, of these horizons of nothing. Let there be something.",
+          "button": "Continue"
+        }
+      ]
+    },
+    {
+      "condition": {
+        "structures":[
+          {
+            "structure": "brick",
+            "amount": 20
+          }
+        ]
+      },
+      "repeatable": "false",
+      "text": [
+        {
+          "title": "The Man Appears",
+          "body": "just as your hands are getting tired. He offers to shape bricks for you. When you ask him what his fee is, he just asks for enough material to build a home.",
+          "button": "Sure"
+        }
+      ]
+    },
+    {
+      "condition": {
+        "structures":[
+          {
+            "structure": "hut",
+            "amount": 5
+          }
+        ]
+      },
+      "repeatable": "false",
+      "text": [
+        {
+          "title": "A Woman Moves In",
+          "body": "in the dead of night. In the morning she emerges with an infant swaddled to her back. The first Brickmaker asks what she can do, how she’ll contribute. Instead of responding, she disappears behind a dune with her child.",
+          "button": "Weird"
+        }
+      ]
+    },
+    {
+      "condition": {
+        "structures":[
+          {
+            "structure": "hut",
+            "amount": 7
+          }
+        ]
+      },
+      "repeatable": "false",
+      "text": [
+        {
+          "title": "She Comes Back",
+          "body": "at dusk, the child cradled her arms. A carcass of a deer is slung over her shoulder, which she drops at your feet.",
+          "button": "Next"
+        },
+        {
+          "body": "”I can do this,” she says, simply. “Can we stay?”",
+          "button": "Welcome"
+        }
+      ]
+    },
+    {
+      "condition": {
+        "structures":[
+          {
+            "structure": "hut",
+            "amount": 8
+          }
+        ]
+      },
+      "repeatable": "false",
+      "text": [
+        {
+          "title": "More People Catch Wind",
+          "body": "of a small settlement rising out of dust. They come from all corners of the land, hungry to build. You didn’t know so many people existed out there.",
+          "button": "Done"
+        }
+      ]
+    },
+    {
+      "condition": {
+        "structures":[
+          {
+            "structure": "hut",
+            "amount": 12
+          }
+        ]
+      },
+      "repeatable": "false",
+      "text": [
+        {
+          "title": "A Soothsayer Comes to Town",
+          "body": "asking to tell petty fortunes. The first Brickmaker refuses her, saying they have no need for cursed work.",
+          "button": "Next"
+        },
+        {
+          "body": "She fixes a beady eye on you as she turns to leave. “Do you know what you’re standing on?” she asks, before disappearing.",
+          "button": "Done"
+        }
+      ]
+    },
+    {
+      "condition": {
+        "structures":[
+          {
+            "structure": "hut",
+            "amount": 15
+          }
+        ]
+      },
+      "repeatable": "false",
+      "text": [
+        {
+          "title": "You Dream",
+          "body": "for the first time. You thought they were myths.",
+          "button": "Next"
+        },
+        {
+          "body": "In your dreams you see tiny insects scurrying over the unpaven roads, burying themselves into the earth. You wake up in a cold sweat.",
+          "button": "Agh"
+        }
+      ]
+    },
+    {
+      "condition": {
+        "structures":[
+          {
+            "structure": "hut",
+            "amount": 20
+          }
+        ]
+      },
+      "repeatable": "false",
+      "text": [
+        {
+          "title": "A Person on The Horizon",
+          "body": "rides the strangest beast you’ve ever seen. When they draw closer you see it isn’t a horse at all, but instead an elaborate mechanical chariot.",
+          "button": "Next"
+        },
+        {
+          "body": "The newcomer dismounts and introduces themselves as an inventor. They offer the town a trade; in exchange for land, they’ll teach a new technique to the brickmakers.",
+          "button": "Next"
+        },
+        {
+          "body": "You look at his number. The lead hunter stands behind you. “Are you sure?” she asks.",
+          "button": "I suppose"
+        }
+      ]
+    },
+    {
+      "condition": {
+        "structures":[
+          {
+            "structure": "hut",
+            "amount": 25
+          }
+        ]
+      },
+      "repeatable": "false",
+      "text": [
+        {
+          "title": "One Day As You Ride Into Town",
+          "body": "you realize the huts you’ve built now sprawled across the horizon, shaped by neighborhoods & industries. The First Brickmaker comes to you that night with an idea for expansion. “It’s time to make something more,” he says.",
+          "button": "More?"
+        }
+      ]
+    },
+    {
+      "condition": {
+        "cardId": "increase-efficiency"
+      },
+      "repeatable": "false",
+      "text": [
+        {
+          "title": "The Inventor Gets His Land",
+          "body": "and by the evening, he delivers on his promise. Using the new technique, the brickmakers’ efficiency increases by 15%.",
+          "button": "Phew"
+        }
+      ]
+    }
+  ]
+}

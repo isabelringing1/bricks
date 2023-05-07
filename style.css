@@ -1,0 +1,251 @@
+body{
+    margin: 0px;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    font-size: 18px;
+    font-family: 'Anonymous Pro', monospace;
+    letter-spacing: -0.2px;
+    overflow: hidden;
+}
+
+#visuals{
+    bottom: -2px;
+    position: absolute;
+    width: 100%;
+    height: 40%;
+    display: flex;
+    flex-direction: column-reverse;
+    font-family: monospace;
+    white-space: pre;
+    font-size: 16px;
+    z-index: -1;
+}
+
+.visual-row{
+    color: black;
+}
+
+#bric{
+    width: auto;
+    height: auto;
+}
+
+#title{
+    width: 100vw;
+    margin-top: 10vh;
+    text-align: center;
+}
+
+#body-bottom{
+    display: flex;
+    justify-content: center;
+    margin-top: 8vh;
+}
+
+#materials{
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    position: absolute;
+    width: inherit;
+}
+
+#stats-div{
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.row{
+    margin: 6px 3px;
+    display: flex;
+    width: inherit;
+    height: 1.2em;
+}
+
+.sub{
+    margin-bottom: 6px;
+}
+
+.button-space{
+    margin-right: 7px;
+    margin-bottom: 7px;
+}
+
+.minus{
+    padding: 2px 7px;
+    margin-right: 3px;
+}
+
+.plus{
+    padding: 2px 6px;
+    margin-right: 3px;
+}
+
+.word{
+    padding: 4px 7px;
+}
+
+
+#messages{
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    align-items: flex-start;
+    text-overflow: clip;
+    overflow: hidden;
+    margin-left: 40vw;
+    line-height: 1.3em;
+}
+
+.message{
+    opacity: 0;
+    transition: opacity 0.4s ease-in-out;
+    color: rgb(0, 0, 0);
+}
+
+.shown{
+    opacity: 1;
+}
+
+.column-inner{
+    width: 400px;
+    height: 45vh;
+    display: flex;
+    justify-content: center;
+}
+
+#cards{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: inherit;
+}
+
+.card{
+    border: outset 3px;
+    padding: 0 0 10px 0;
+    margin: 10px 25px;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.active:hover{
+    border: inset 3px;
+    background-color:rgb(0, 0, 0, 0.1);
+}
+
+.preview{
+    border: dotted 3px;
+    color: grey;
+}
+
+.card-title{
+    font-weight: bold;
+}
+
+.card-body{
+    margin: 10px 20px 0 20px;
+}
+
+#modal-container{
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    background-color: rgb(0, 0, 0, 0.2);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+}
+
+#modal{
+    border: solid black 1px;
+    background-color: white;
+    width: 400px;
+    height: auto;
+    text-align: center;
+    padding: 0 20px;
+}
+
+#modal-title{
+    font-weight: bold;
+    font-size: 25px;
+    width: 100%;
+    padding: 15px 0px;
+}
+
+#modal-body{
+    font-size: 20px;
+    line-height: 23px;
+    text-align: justify;
+}
+
+#modal-button-container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 20px 0px;
+}
+
+#modal-button{
+    width: auto;
+    padding: 0 25px;
+    height: 40px;
+}
+
+.base-button{
+    border: solid black 1px;
+    border-radius: 2px;
+    background-color: rgb(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.base-button:hover{
+    background-color: rgb(0, 0, 0, 0.4);
+}
+
+.base-button:active{
+    background-color: rgb(0, 0, 0, 0.6);
+}
+
+#menu{
+    display: flex;
+    flex-direction: column;
+    justify-content: right;
+    align-items: right;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+#save-button{
+    width: auto;
+    padding: 0 10px;
+    height: 25px;
+}
+
+#reset-button{
+    width: auto;
+    padding: 0 10px;
+    height: 25px;
+}
+
+.tag{
+    padding-left: 15px;
+    padding-top: 5px;
+    transition: opacity 0.2s ease-in-out;
+    opacity: 0;
+}
+
+.tag.show{
+    opacity: 1;
+}
