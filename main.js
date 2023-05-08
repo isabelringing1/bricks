@@ -12,15 +12,20 @@ var messages = {};
 var messagesMax = 20;
 var messageHead = 0;
 var messageTail = 0;
+var digCount = 0;
 var resolveFunc;
 var inventorShown = false;
+var brickmakerShown = false;
 
 var messageMap = {
     "brick-plus": "Created a brick from the earth's clay.",
     "brick-plus-max": "You have depleted the land.",
-    "brick-minus-one": "Crumbled the brick back into earth.",
-    "brick-minus-again": "Crumbled the brick back into earth, again.",
+    "brick-minus1": "Crumbled a brick back into earth.",
+    "brick-minus2": "Crumbled a brick back into earth, again.",
+    "brick-minus3": "Crumbled a brick back into earth. You're having fun despite yourself.",
     "brick-minus-max": "No bricks.",
+    "brick-minus-max2": "No bricks. You dig into cracked earth.",
+    "brick-minus-max3": "No bricks. You dig into cracked earth, and a beetle scurries out.",
     "hut-build": "Built a hut.",
     "brick-generate": "Hired a brickmaker.",
     "hut-build-err": "ERROR: Could not build a hut.",
@@ -63,7 +68,7 @@ $(document).ready(function() {
         $(".minus").click(onMinusClicked);
 
         $("#title").click(function(){
-            simulate();
+            //simulate();
         });
 
         $("#modal-button").click(() => {
@@ -267,16 +272,31 @@ function onMinusClicked(event){
     if (generator != undefined){
         if (decrementStructure(generator, structureName, 1)){
             if (structureName == "brick"){
-                if (generator.decremented == 1){
-                    postMessage(messageMap[structureName + "-minus-one"]);
+                if (generator.decremented <= 2){
+                    postMessage(messageMap[structureName + "-minus1"]);
+                }
+                else if (generator.decremented <= 10){
+                    postMessage(messageMap[structureName + "-minus2"]);
                 }
                 else{
-                    postMessage(messageMap[structureName + "-minus-again"]);
+                    postMessage(messageMap[structureName + "-minus3"]);
                 }
             }
         }
         else{
-            postMessage(messageMap[structureName + "-minus-max"]);
+            digCount++;
+            if (digCount <= 2){
+                postMessage(messageMap[structureName + "-minus-max"]);
+            }
+            else{
+                if (Math.random() > 0.8){
+                    postMessage(messageMap[structureName + "-minus-max2"]);
+                }
+                else{
+                    postMessage(messageMap[structureName + "-minus-max3"]);
+                }
+                
+            }            
         }
     }
 }
@@ -441,7 +461,8 @@ function onCardClick(e){
             var generator = generatorsByNameMap.get(card.structure);
             console.log(generator)
             generator.multiplier *= parseFloat(card.amount);
-            console.log(generator.multiplier, generator.increment)
+            var costGen = generatorsByNameMap.get(card.cost.currency);
+            costGen.value -= card.cost.current;
             $("#" + card.structure + "-rate")[0].innerHTML = (generator.multiplier * generator.increment).toFixed(2);
         }
     }
@@ -497,7 +518,7 @@ function updateStory(callback = null){
         else if (condition.hasOwnProperty("decrement")){
             if (condition.structure != null){
                 var gen = generatorsByNameMap.get(condition.structure);
-                if (gen.decremented < parseInt(condition.decrement)){
+                if (gen.decremented < parseInt(condition.decrement) || !brickmakerShown){
                     conditionMet = false;
                 }
             }
@@ -512,6 +533,9 @@ function updateStory(callback = null){
             if (story.hasOwnProperty("condition_set")){
                 if (story.condition_set == "inventorShown"){
                     inventorShown = true;
+                }
+                if (story.condition_set == "brickmakerShown"){
+                    brickmakerShown = true;
                 }
             }
             break;

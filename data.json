@@ -118,7 +118,8 @@
           "body": "just as your hands are getting tired. He offers to shape bricks for you. When you ask him what his fee is, he just asks for enough material to build a home.",
           "button": "Sure"
         }
-      ]
+      ],
+      "condition_set": "brickmakerShown"
     },
     {
       "condition": {
@@ -254,7 +255,7 @@
       "text": [
         {
           "title": "A Person on The Horizon",
-          "body": "rides the strangest beast you’ve ever seen. When they draw closer you see it isn’t a horse at all, but instead an elaborate mechanical chariot.",
+          "body": "rides the strangest beast you’ve ever seen. When they draw closer you see it isn’t a horse at all, but instead a kind of mechanical chariot.",
           "button": "Next"
         },
         {
@@ -404,8 +405,9 @@
     },
     {
       "condition": {
-        "decrement": "5",
-        "structure": "brick"
+        "decrement": "10",
+        "structure": "brick",
+        "use_total": "false"
       },
       "repeatable": "false",
       "text": [
